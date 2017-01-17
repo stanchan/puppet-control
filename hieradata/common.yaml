@@ -1,0 +1,40 @@
+---
+message: "This node is using common data"
+
+base::purge_sudoers: false
+base::replace_sudoers: false
+
+msgpack::version: '0.7.5'
+
+modules::installed::module_file: "modules.yaml"
+
+profile::java::version: '8'
+
+resolv_conf::domain: 'chanfx.com'
+resolv_conf::nameservers:
+  - '8.8.8.8'
+  - '8.8.6.6'
+
+ssh::purge_ssh_keys: false
+
+#Enable code manager
+puppet_enterprise::profile::master::code_manager_auto_configure: true
+puppet_enterprise::master::code_manager::authenticate_webhook: false
+
+#pe-console-services tuning
+#https://docs.puppetlabs.com/pe/latest/console_config.html#tuning-the-classifier-synchronization-period
+#disable classifier scheduled sync and rely on r10k postrun command to sync the classes
+puppet_enterprise::profile::console::classifier_synchronization_period: 0
+
+puppetserver::gems:
+  - msgpack
+  - toml
+
+puppet::facts_dir::linux: '/etc/facter/facts.d'
+puppet::facts_dir::windows: 'C:/ProgramData/PuppetLabs/facter/facts.d'
+puppet::master::fqdn: 'puppet'
+puppet::agent::version: '1.8.2'
+puppet::minimal::host: '^test.*/^base.*'
+
+pe_r10k::cachedir: /var/cache/r10k
+pe_r10k::remote: git@github.com:stanchan/puppet-control.git
